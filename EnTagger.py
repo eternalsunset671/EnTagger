@@ -4,6 +4,8 @@ import os
 
 import time
 
+#import PyQT5
+
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QAction, QFileDialog, QTextEdit,
                               QFrame, QPushButton, QWidget, QGridLayout, QVBoxLayout, QSizePolicy)
 from PyQt5.QtGui import  QFont, QTextCharFormat, QSyntaxHighlighter, QColor
@@ -300,6 +302,7 @@ class EnTagger(QMainWindow):
             for sentence in sentences:
                 if '?' in sentence:
                     parts_of_sentence = re.split(r'([,-])', sentence)
+                    
                     tmp = []
                     for part in parts_of_sentence:
                         if part == '\n' or part == ',':
@@ -307,6 +310,7 @@ class EnTagger(QMainWindow):
                         else:
                             tmp += [part]
                     parts_of_sentence = tmp
+                    print(parts_of_sentence)
                     if len(parts_of_sentence) != 1:
 
                         grammar_dict = {
@@ -355,7 +359,10 @@ class EnTagger(QMainWindow):
 
                         for i in range(-1, -3, -1):
                             part = parts_of_sentence[i]
+                            
                             gap = re.findall(r'\s', part)
+                            if len(gap) == 0:
+                                break
                             start = len(gap[0])
                             pattern = gap[0]
                             if len(gap) == 2:
@@ -379,7 +386,7 @@ class EnTagger(QMainWindow):
                                 else:
                                     pass
 
-                            elif len(gap) == 1:
+                            elif len(gap) == 1 and i == -1:
                                 if re.search(r'\sOK?', part):
                                     self.text = self.text.replace(sentence, sentence + '_TQ_')
                                     break
